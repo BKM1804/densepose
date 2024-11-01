@@ -35,11 +35,12 @@ DEPTH_ANYTHING_V2_MODEL_NAME_DICT = {
 }
 
 temp_dir = tempfile.gettempdir()
-annotator_ckpts_path = os.path.join(Path(__file__).parents[2], 'ckpts')
+# ANNOTATOR_CKPTS_PATH = os.path.join(Path(__file__).parents[2], 'ckpts')
+ANNOTATOR_CKPTS_PATH = 'ckpts'
 USE_SYMLINKS = False
 
 try:
-    annotator_ckpts_path = os.environ['AUX_ANNOTATOR_CKPTS_PATH']
+    ANNOTATOR_CKPTS_PATH = os.environ['AUX_ANNOTATOR_CKPTS_PATH']
 except:
     warnings.warn("Custom pressesor model path not set successfully.")
     pass
@@ -263,7 +264,7 @@ def check_hash_from_torch_hub(file_path, filename):
     curr_hash = sha256sum(file_path)
     return curr_hash[:len(ref_hash)] == ref_hash
 
-def custom_torch_download(filename, ckpts_dir=annotator_ckpts_path):
+def custom_torch_download(filename, ckpts_dir=ANNOTATOR_CKPTS_PATH):
     local_dir = os.path.join(get_dir(), 'checkpoints')
     model_path = os.path.join(local_dir, filename)
 
@@ -288,13 +289,13 @@ def custom_torch_download(filename, ckpts_dir=annotator_ckpts_path):
     print(f"model_path is {model_path}")
     return model_path
 
-def custom_hf_download(pretrained_model_or_path, filename, cache_dir=temp_dir, ckpts_dir=annotator_ckpts_path, subfolder='', use_symlinks=USE_SYMLINKS, repo_type="model"):
+def custom_hf_download(pretrained_model_or_path, filename, cache_dir=temp_dir, ckpts_dir=ANNOTATOR_CKPTS_PATH, subfolder='', use_symlinks=USE_SYMLINKS, repo_type="model"):
 
     local_dir = os.path.join(ckpts_dir, pretrained_model_or_path)
     model_path = os.path.join(local_dir, *subfolder.split('/'), filename)
 
     if len(str(model_path)) >= 255:
-        warnings.warn(f"Path {model_path} is too long, \n please change annotator_ckpts_path in config.yaml")
+        warnings.warn(f"Path {model_path} is too long, \n please change ANNOTATOR_CKPTS_PATH in config.yaml")
 
     if not os.path.exists(model_path):
         print(f"Failed to find {model_path}.\n Downloading from huggingface.co")
