@@ -5,7 +5,7 @@ import cv2
 import yaml
 from pathlib import Path
 from enum import Enum
-from .log import log
+from densepose.log import log
 import subprocess
 import threading
 # import comfy
